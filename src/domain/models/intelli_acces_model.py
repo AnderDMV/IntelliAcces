@@ -1,0 +1,2 @@
+class IntelliAccesModel():
+    pass

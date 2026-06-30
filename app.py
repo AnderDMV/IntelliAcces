@@ -1,0 +1,78 @@
+from src.infrastructure.threads.camera_thread import CameraThread
+
+from src.presentation.main_window import MainWindow
+from src.presentation.overlay_window import OverlayWindow
+from src.presentation.navigator import Navigator
+
+from src.presentation.views.home_view import HomeView
+from src.presentation.views.calibration_view import CalibrationView 
+from src.presentation.views.camera_state_view import CameraStateView
+from src.presentation.views.apps_view import AppsView
+from src.presentation.views.apps_selector_view import AppsSelectorView
+
+from src.presentation.presenters.overlay_presenter import OverlayPresenter
+from src.presentation.presenters.calibatrion_presenter import CalibrationPresenter
+from src.presentation.presenters.camera_state_presenter import CameraStatePresenter
+from src.presentation.presenters.home_presenter import HomePresenter
+from src.presentation.presenters.apps_presenter import AppsPresenter 
+from src.presentation.presenters.apps_selector_presenter import AppsSelectorPresenter
+
+from src.services.vision.camera_service import CameraService
+from src.services.vision.head_tracking_service import HeadTrackingService
+from src.services.vision.face_gesture_detector import FaceGestureDetector
+from src.services.vision.face_pipeline import FacePipeline
+from src.services.main_service import MainService
+from src.services.actions.zoom_service import ZoomService
+
+class Application():
+    #Dependencies
+    def __init__(self, qt_app):
+        self._qt_app = qt_app
+        self._build()
+        
+    def _build(self):
+        #Threads
+        self._camera_threads = CameraThread()
+
+        #Windows
+        self._overlay_window = OverlayWindow()#Overlay Window - draw circle
+        self._mainWindow = MainWindow()#Main Window visual - with stacks
+
+        #Navigator (control the stack)
+        navigator = Navigator(self._mainWindow)
+        
+        #Services
+        self._head_tracking_service = HeadTrackingService()
+        self._camera_service = CameraService()
+        self._mainService = MainService()
+        self._zoom_service = ZoomService()
+        self._face_gesture_detector = FaceGestureDetector()
+        self._face_pipeline = FacePipeline(self._head_tracking_service, self._face_gesture_detector)
+        
+        #Views
+        self._home_view = HomeView()
+        self._calibration_view = CalibrationView()
+        self._camera_state_view = CameraStateView()
+        self._apps_view = AppsView()
+        self._apps_select_view = AppsSelectorView()
+
+        #Presenters
+        self._overlay_presenter = OverlayPresenter(self._overlay_window, self._calibration_view, self._camera_state_view, self._camera_threads, self._camera_service, self._face_pipeline)
+        self._camera_state_presenter = CameraStatePresenter(self._camera_state_view, navigator)
+        self._calibration_presenter = CalibrationPresenter(self._calibration_view, navigator)
+        self._home_presenter = HomePresenter(self._home_view, navigator , self._mainService)
+        self._apps_presenter = AppsPresenter(self._apps_view, navigator, self._mainService)
+        self._apps_select_presenter = AppsSelectorPresenter(self._apps_select_view, navigator, self._mainService)
+
+        #Register navigators
+        navigator.register("homeView",self._home_view)
+        navigator.register("calibrationView", self._calibration_view)
+        navigator.register("cameraStateView", self._camera_state_view)
+        navigator.register("appsView",self._apps_view)
+        navigator.register("appsSelectView", self._apps_select_view)
+        
+
+    def start(self):
+        self._zoom_service.start()
+        self._mainWindow.show()
+        self._overlay_window.show()
