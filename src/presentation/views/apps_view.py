@@ -26,7 +26,7 @@ class AppsView(QWidget):
 
     add_apps_clicked = Signal()
     back_clicked = Signal()
-    open_app_clicked = Signal(str, str)
+    open_app_clicked = Signal(str, str, str)
 
     def __init__(self):
         super().__init__()
