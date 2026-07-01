@@ -1,7 +1,9 @@
 import numpy as np
 from src.services.actions.mouse_controller import MouseController
 import time
-import pyautogui
+
+BLINK_COOLDOWN_MS = 1500
+BROW_COOLDOWN_MS = 2000
 
 class OverlayPresenter():
     def __init__(self, view, calibration_view, state_view,  camera_thread, camera_service, face_pipeline):
@@ -20,12 +22,15 @@ class OverlayPresenter():
                                   self._on_brow_gesture,
                                   self._on_blink_gesture)
         
-        self.last_blink = int(time.time() * 1000)
-        self.last_brow_gesture = int(time.time() * 1000)
+        self.last_blink = int(time.monotonic() * 1000)
+        self.last_brow_gesture = int(time.monotonic() * 1000)
 
         self._clickedState = False
         self._blink_ready = False
         self._brow_gesture_ready = False
+
+        self._brow_in_progress = False
+        self._blink_in_progress = False
 
     def _on_frame(self, frame):
         h, w, ch = frame.shape
@@ -46,41 +51,45 @@ class OverlayPresenter():
                 self._calibration_view.update_face_state(False)
 
     def _on_blink_gesture(self, blink: bool, cords):
-        #Check the difference between `last_blink` and `now_blink`; if it exceeds 1500, stop the calculation and set `blink_ready` to `True`.
+        #Check the difference between `last_blink` and `now_blink`; if it exceeds BLINK_COOLDOWN_MS, stop the calculation and set `blink_ready` to `True`.
         if not self._blink_ready:
-            now_blink = int(time.time() * 1000)
-            rest = (self.last_blink - now_blink) * -1
-            if rest >= 1500 :  self._blink_ready = True
+            self.now_blink = int(time.monotonic() * 1000)
+            rest = (self.last_blink - self.now_blink) * -1
+            if rest >= BLINK_COOLDOWN_MS:  
+                self._blink_ready = True
         
-        if blink and self._clickedState and self._blink_ready:
-            self.last_blink = now_blink
+        if blink and self._clickedState and self._blink_ready and not self._blink_in_progress:
+            self._blink_in_progress = True
+            self.last_blink = self.now_blink
+            self._blink_ready = False
             x,y = cords
-            #pyautogui.click(x, y) 
             mc =  MouseController()
             mc.click_at(x, y)
             mc.move_to(1,1, duration=0)
-            #pyautogui.moveTo(x, y, duration=0.2)
-        if self._calibration_view.isVisible() and blink:
-            
+
+        if self._calibration_view.isVisible() and blink and self._blink_ready and not self._blink_in_progress:
+            self._blink_in_progress = True
+            self.last_blink = self.now_blink
+            self._blink_ready = False
             self._face_pipeline.head_tracker.start_calibration()
-# Hace clic en esa posición
-        else:
-            pass
+        if not blink and self._blink_in_progress:
+            self._blink_in_progress = False
 
     def _on_brow_gesture(self, brow: bool):
-        #Check the difference between `last_brow` and `now_brow`; if it exceeds 1500, stop the calculation and set `brow_gesture_ready` to `True`.
+        #Check the difference between `last_brow` and `now_brow`; if it exceeds BROW_COOLDOWN_MS, stop the calculation and set `brow_gesture_ready` to `True`.
         if not self._brow_gesture_ready:
-            now_brow_gesture = int(time.time() * 1000)
-            rest = (self.last_brow_gesture - now_brow_gesture) * -1
-            if rest >= 2000 :  self._brow_gesture_ready = True
+            self.now_brow_gesture = int(time.monotonic() * 1000)
+            rest = (self.last_brow_gesture - self.now_brow_gesture) * -1
+            if rest >= BROW_COOLDOWN_MS:  
+                self._brow_gesture_ready = True
         
-
-        if brow and self._brow_gesture_ready:
-            self.last_brow_gesture = now_brow_gesture
+        if brow and self._brow_gesture_ready and not self._brow_in_progress:
+            self._brow_in_progress = True
+            self.last_brow_gesture = self.now_brow_gesture
+            self._brow_gesture_ready = False
+            self._clickedState = not self._clickedState
             print('detect brow up', self._clickedState)
-            if not self.used:
-                self._clickedState = not self._clickedState
-                self.used = True
-        else:
-            self.used = False
-            pass
+        
+        if not brow and self._brow_in_progress:
+            print('cambio')
+            self._brow_in_progress = False
