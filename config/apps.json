@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Word",
+        "exe_path": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+        "icon_path": "assets\\appsIcons\\Word.png"
+    },
+    {
+        "name": "Word",
+        "exe_path": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+        "icon_path": "assets/icons/default.png"
+    },
+    {
+        "name": "Discord",
+        "exe_path": "C:\\Users\\David\\AppData\\Local\\Discord\\Update.exe",
+        "icon_path": "assets\\appsIcons\\Discord.png"
+    },
+    {
+        "name": "Brave",
+        "exe_path": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        "icon_path": "assets/icons/default.png"
+    },
+    {
+        "name": "Intel® Graphics Software",
+        "exe_path": "C:\\Program Files\\Intel\\Intel Graphics Software\\IntelGraphicsSoftware.exe",
+        "icon_path": "C:\\WINDOWS\\Installer\\{8037CB31-8466-4B66-ABCF-853FBB335583}\\app.ico"
+    },
+    {
+        "name": "Iriun Webcam",
+        "exe_path": "C:\\Program Files (x86)\\Iriun Webcam\\IriunWebcam.exe",
+        "icon_path": "assets/icons/default.png"
+    },
+    {
+        "name": "Word",
+        "exe_path": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+        "icon_path": "assets/icons/default.png"
+    },
+    {
+        "name": "pgAdmin 4",
+        "exe_path": "C:\\Program Files\\PostgreSQL\\18\\pgAdmin 4\\runtime\\pgAdmin4.exe",
+        "icon_path": "C:/PROGRA~1/POSTGR~1/18/scripts/images/pgAdmin4.ico"
+    },
+    {
+        "name": "Android Studio",
+        "exe_path": "C:\\Program Files\\Android\\Android Studio\\bin\\studio64.exe",
+        "icon_path": "assets\\appsIcons\\Android Studio.png"
+    }
+]

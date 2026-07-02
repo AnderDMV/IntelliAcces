@@ -22,6 +22,9 @@ from src.services.vision.head_tracking_service import HeadTrackingService
 from src.services.vision.face_gesture_detector import FaceGestureDetector
 from src.services.vision.face_pipeline import FacePipeline
 from src.services.main_service import MainService
+from src.services.apps.apps_config_service import AppsConfigService
+from src.services.apps.apps_launcher_service import AppLauncherService
+from src.services.apps.installed_apps_service import InstalledAppsService
 from src.services.actions.zoom_service import ZoomService
 
 class Application():
@@ -45,6 +48,9 @@ class Application():
         self._head_tracking_service = HeadTrackingService()
         self._camera_service = CameraService()
         self._mainService = MainService()
+        self._apps_config_service = AppsConfigService()
+        self._apps_launcher_service = AppLauncherService()
+        self._installed_apps_service = InstalledAppsService()
         self._zoom_service = ZoomService()
         self._face_gesture_detector = FaceGestureDetector()
         self._face_pipeline = FacePipeline(self._head_tracking_service, self._face_gesture_detector)
@@ -61,8 +67,8 @@ class Application():
         self._camera_state_presenter = CameraStatePresenter(self._camera_state_view, navigator)
         self._calibration_presenter = CalibrationPresenter(self._calibration_view, navigator)
         self._home_presenter = HomePresenter(self._home_view, navigator , self._mainService)
-        self._apps_presenter = AppsPresenter(self._apps_view, navigator, self._mainService)
-        self._apps_select_presenter = AppsSelectorPresenter(self._apps_select_view, navigator, self._mainService)
+        self._apps_presenter = AppsPresenter(self._apps_view, navigator, self._apps_config_service, self._apps_launcher_service)
+        self._apps_select_presenter = AppsSelectorPresenter(self._apps_select_view, navigator, self._installed_apps_service, self._apps_config_service, self._apps_presenter)
 
         #Register navigators
         navigator.register("homeView",self._home_view)

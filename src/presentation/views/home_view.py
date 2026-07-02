@@ -139,8 +139,7 @@ class HomeTopBar(QWidget):
         layout.addWidget(logo)
         layout.addLayout(text_layout)
         layout.addStretch()
-        layout.addWidget(btn_theme)
-        layout.addWidget(btn_settings)
+        
         layout.addSpacing(6)
         layout.addWidget(btn_minimize)
         layout.addWidget(btn_close)
@@ -170,7 +169,7 @@ class CenterPanel(QWidget):
             }
         """)
 
-        subtitle = QLabel("Selecciona una opción para comenzar")
+        subtitle = QLabel("")
         subtitle.setAlignment(Qt.AlignCenter)
         subtitle.setStyleSheet("""
             QLabel {
@@ -185,18 +184,18 @@ class CenterPanel(QWidget):
         cards_layout.setSpacing(8)
 
         self.button_microphone = AccessCardButton(
-            title="Micrófono",
-            subtitle="Control por comandos\nde voz",
-            action_text="Abrir",
+            title="Calibrar",
+            subtitle="Calibración del head\nTracking",
+            action_text="Calibrar",
             card_type="microphone",
             accent_1="#5CE1FF",
             accent_2="#58D7E7"
         )
 
         self.button_extra = AccessCardButton(
-            title="Extra",
-            subtitle="Funciones adicionales\ny herramientas",
-            action_text="Explorar",
+            title="Estado de la\ncaptura",
+            subtitle="Ver el estado de\nla captura de video",
+            action_text="Abrir",
             card_type="star",
             accent_1="#5D78FF",
             accent_2="#7246FF"
@@ -371,9 +370,9 @@ class AccessCardButton(QPushButton):
         painter.drawEllipse(icon_circle)
 
         if self.card_type == "microphone":
-            self.draw_microphone_icon(painter, QPointF(w / 2, 66))
+            self.drac_refactor_icon(painter, QPointF(w / 2, 66))
         elif self.card_type == "star":
-            self.draw_star_icon(painter, QPointF(w / 2, 66))
+            self.draw_camera_icon(painter, QPointF(w / 2, 66))
         else:
             self.draw_apps_icon(painter, QPointF(w / 2, 66))
 
@@ -416,59 +415,21 @@ class AccessCardButton(QPushButton):
         painter.setFont(action_font)
         painter.drawText(button_rect, Qt.AlignCenter, self.action_text + "   ›")
 
-    def draw_microphone_icon(self, painter, center):
-        body = QRectF(center.x() - 12, center.y() - 25, 24, 40)
-
-        mic_gradient = QLinearGradient(
-            body.left(),
-            body.top(),
-            body.right(),
-            body.bottom()
-        )
-        mic_gradient.setColorAt(0.0, QColor("#FFFFFF"))
-        mic_gradient.setColorAt(1.0, self.accent_1)
-
-        painter.setBrush(QBrush(mic_gradient))
-        painter.setPen(QPen(QColor(255, 255, 255, 180), 1.4))
-        painter.drawRoundedRect(body, 12, 12)
-
-        painter.setPen(QPen(self.accent_1, 2.5))
-        painter.drawArc(
-            QRectF(center.x() - 22, center.y() - 9, 44, 38),
-            200 * 16,
-            140 * 16
-        )
-
-        painter.drawLine(
-            QPointF(center.x(), center.y() + 18),
-            QPointF(center.x(), center.y() + 31)
-        )
-
-        painter.drawLine(
-            QPointF(center.x() - 13, center.y() + 31),
-            QPointF(center.x() + 13, center.y() + 31)
-        )
-
-    def draw_star_icon(self, painter, center):
-        painter.setPen(QPen(self.accent_1, 3.5))
+    def drac_refactor_icon(self, painter, center):
+        painter.setPen(QPen(QColor("#FFD447"), 3))
         painter.setBrush(Qt.NoBrush)
+        painter.drawEllipse(QRectF(center.x() - 18, center.y() - 18, 36, 36))
+        painter.drawLine(center.x(), center.y() - 18, center.x(), center.y() + 18)
+        painter.drawLine(center.x() - 18, center.y(), center.x() + 18, center.y())
 
-        points = []
-        outer_radius = 27
-        inner_radius = 12
-
-        import math
-
-        for i in range(10):
-            angle = -90 + i * 36
-            radius = outer_radius if i % 2 == 0 else inner_radius
-
-            x = center.x() + radius * math.cos(math.radians(angle))
-            y = center.y() + radius * math.sin(math.radians(angle))
-            points.append(QPointF(x, y))
-
-        polygon = QPolygonF(points)
-        painter.drawPolygon(polygon)
+    def draw_camera_icon(self, painter, center):
+        body = QRectF(center.x() - 20, center.y() - 12, 40, 24)
+        painter.setBrush(QBrush(QColor("#5CE1FF")))
+        painter.setPen(QPen(QColor("#3AC7FF"), 2))
+        painter.drawRoundedRect(body, 6, 6)
+        lens = QRectF(center.x() - 8, center.y() - 8, 16, 16)
+        painter.setBrush(QBrush(QColor("#101831")))
+        painter.drawEllipse(lens)
 
     def draw_apps_icon(self, painter, center):
         size = 17
