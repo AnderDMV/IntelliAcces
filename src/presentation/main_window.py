@@ -7,9 +7,9 @@ class MainWindow(QWidget):
         super().__init__()
         #Settings window
         self.setWindowTitle("Intelli Acces")
-        self.resize(500, 500)
-        self.setMinimumSize(500, 500)   # no puede ser más pequeña
-        self.setMaximumSize(500, 500)
+        self.resize(800, 800)
+        self.setMinimumSize(800, 800) 
+        self.setMaximumSize(800, 800)
         #self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet("background-color: #406EA8;")

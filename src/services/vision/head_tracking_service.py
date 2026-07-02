@@ -57,7 +57,6 @@ class HeadTrackingService():
             key_points[name] = pt
 
 
-        ###################################################################
         # Extract points
         left = key_points["left"]
         right = key_points["right"]

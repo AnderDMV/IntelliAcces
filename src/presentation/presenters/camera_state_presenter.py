@@ -6,4 +6,4 @@ class CameraStatePresenter():
         self.view.back_clicked.connect(self.on_back_clicked)
         
     def on_back_clicked(self):    
-        self.navigator.go_to("homeView", 500, 500)
+        self.navigator.go_to("homeView", 560, 560)

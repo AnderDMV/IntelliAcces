@@ -6,4 +6,4 @@ class CalibrationPresenter():
         self.view.confirm_clicked.connect(self.on_confirm_clicked)
         
     def on_confirm_clicked(self):    
-        self.navigator.go_to("homeView", 500, 500)
+        self.navigator.go_to("homeView", 560, 560)

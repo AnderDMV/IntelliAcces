@@ -20,8 +20,8 @@ from PySide6.QtCore import Qt, Signal, QRectF, QPointF
 
 
 class HomeView(QWidget):
-    microphone_clicked = Signal()
-    extra_clicked = Signal()
+    calibration_clicked = Signal()
+    camera_state_clicked = Signal()
     apps_clicked = Signal()
 
     def __init__(self):
@@ -39,8 +39,8 @@ class HomeView(QWidget):
 
         self.setLayout(main_layout)
 
-        self.centerPanel.button_microphone.clicked.connect(self.microphone_clicked)
-        self.centerPanel.button_extra.clicked.connect(self.extra_clicked)
+        self.centerPanel.button_calibration.clicked.connect(self.calibration_clicked)
+        self.centerPanel.button_camera_state.clicked.connect(self.camera_state_clicked)
         self.centerPanel.button_apps.clicked.connect(self.apps_clicked)
 
 
@@ -183,7 +183,7 @@ class CenterPanel(QWidget):
         cards_layout.setContentsMargins(0, 24, 0, 0)
         cards_layout.setSpacing(8)
 
-        self.button_microphone = AccessCardButton(
+        self.button_calibration = AccessCardButton(
             title="Calibrar",
             subtitle="Calibración del head\nTracking",
             action_text="Calibrar",
@@ -192,7 +192,7 @@ class CenterPanel(QWidget):
             accent_2="#58D7E7"
         )
 
-        self.button_extra = AccessCardButton(
+        self.button_camera_state = AccessCardButton(
             title="Estado de la\ncaptura",
             subtitle="Ver el estado de\nla captura de video",
             action_text="Abrir",
@@ -211,15 +211,15 @@ class CenterPanel(QWidget):
         )
 
         for button in (
-            self.button_microphone,
-            self.button_extra,
+            self.button_calibration,
+            self.button_camera_state,
             self.button_apps
         ):
             self.add_shadow(button)
 
         cards_layout.addStretch()
-        cards_layout.addWidget(self.button_microphone)
-        cards_layout.addWidget(self.button_extra)
+        cards_layout.addWidget(self.button_calibration)
+        cards_layout.addWidget(self.button_camera_state)
         cards_layout.addWidget(self.button_apps)
         cards_layout.addStretch()
 
@@ -288,7 +288,7 @@ class AccessCardButton(QPushButton):
         self.accent_1 = QColor(accent_1)
         self.accent_2 = QColor(accent_2)
 
-        self.setFixedSize(158, 255)
+        self.setFixedSize(180, 265)
         self.setCursor(Qt.PointingHandCursor)
         self.setMouseTracking(True)
         self.setText("")
@@ -381,7 +381,7 @@ class AccessCardButton(QPushButton):
         title_font.setPointSize(12)
         title_font.setBold(True)
         painter.setFont(title_font)
-        painter.drawText(QRectF(0, 126, w, 28), Qt.AlignCenter, self.title)
+        painter.drawText(QRectF(0, 124, w, 35), Qt.AlignCenter, self.title)
 
         painter.setPen(QColor("#B8C2D6"))
         subtitle_font = QFont()

@@ -89,27 +89,22 @@ class FaceGestureDetector():
         return eyes_closed_confirmed
 
     def detectBrowUp(self, landmarks) -> bool:
-        # Promedio Y de cejas
+        # AVG Brow
         brow_y = np.mean([landmarks[i].y for i in self._BROW])
-        # Promedio Y de ojos POINT 33 and 263
+        # AVG eyes Y POINT 33 and 263
         eye_y = (landmarks[self._LEFT_EYE[0]].y + landmarks[self._RIGHT_EYE[3]].y) / 2
-        # Diferencia vertical ceja-ojo
-        diff = eye_y - brow_y  # positivo si la ceja está más arriba
+        diff = eye_y - brow_y  
 
-        # Suavizado temporal
         self._WINDOW.append(diff)
         diff_smoothed = sum(self._WINDOW) / len(self._WINDOW)
 
-        # Baseline en reposo
         if self._BASELINE is None and len(self._WINDOW) == self._WINDOW.maxlen:
             self._BASELINE = diff_smoothed
 
-        # Sensibilidad adaptativa: si la cabeza se inclina, ajusta margen
-        # (ejemplo simple: usar variación de nariz respecto a ojos)
+
         nose_y = landmarks[1].y
         pitch_factor = 1.0 + abs(nose_y - eye_y) * 2.0
 
-        # Detección ceja levantada
         eyebrow_up_confirmed = self._BASELINE is not None and diff_smoothed > self._BASELINE + 0.02 * pitch_factor
 
         return eyebrow_up_confirmed

@@ -40,4 +40,4 @@ class AppsPresenter:
 
     def on_back_clicked(self):
         # Volver a la vista principal
-        self.navigator.go_to("homeView", 500, 800)
+        self.navigator.go_to("homeView", 560, 560)
