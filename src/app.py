@@ -44,13 +44,13 @@ class Application():
         navigator = Navigator(self._mainWindow)
         
         #Services
-        self._head_tracking_service = HeadTrackingService()
         self._camera_service = CameraService()
         self._mainService = MainService()
         self._apps_config_service = AppsConfigService()
         self._apps_launcher_service = AppLauncherService()
         self._installed_apps_service = InstalledAppsService()
         self._face_gesture_detector = FaceGestureDetector()
+        self._head_tracking_service = HeadTrackingService()
         self._face_pipeline = FacePipeline(self._head_tracking_service, self._face_gesture_detector)
         
         #Views

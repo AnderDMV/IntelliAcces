@@ -1,15 +1,30 @@
 from abc import ABC, abstractmethod
 
 class ICameraSource(ABC):
+    """
+        Interface for the camera service
+    """
     
     @abstractmethod
-    def start(self):
+    def open(self):
+        """
+        Open the camera to initialize capturing frames.
+
+        Raises:
+            RuntimeError: if the camera cannot be opened.
+        """
+        ...
+
+    @abstractmethod
+    def close(self):
+        """
+        Close the camera and release the resource.
+        """
         ...
 
     @abstractmethod
     def get_frame(self):
-        ...
-
-    @abstractmethod
-    def is_active(self) -> bool:
+        """
+        Capture a frame from the camera and return the image data.
+        """
         ...

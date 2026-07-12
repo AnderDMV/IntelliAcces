@@ -28,8 +28,8 @@ class _Worker(QObject):
                 #ok, frame = self._camera.get_frame()
                 #if not ok:
                 #    break
-                origin, cords, blink, brow_up = self._face_pipeline.process_frame(frame)
-                self.frame_ready.emit(origin)
+                frame_origin, frame_landmarks, cords, blink, brow_up = self._face_pipeline.process_frame(frame)
+                self.frame_ready.emit((frame_origin, frame_landmarks))
                 self.head_pose_ready.emit(cords)
                 self.blink_gesture_ready.emit(blink, cords)
                 self.brow_gesture_ready.emit(brow_up)

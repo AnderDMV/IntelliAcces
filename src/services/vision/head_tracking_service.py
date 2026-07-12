@@ -1,3 +1,4 @@
+from src.domain.interfaces.i_head_tracking_service import IHeadTrackingService
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from collections import deque
@@ -5,6 +6,7 @@ import mediapipe as mp
 
 import numpy as np
 import math
+
 
 LANDMARKS = {
     "left": 234,
@@ -14,7 +16,22 @@ LANDMARKS = {
     "front": 1,
 }
 
-class HeadTrackingService():
+class HeadTrackingService(IHeadTrackingService):
+    """
+    Performs head tracking using facial recognition with facial landmarks.
+    
+    Implementation of the IHeadTrackingService interface using MediaPipe for head tracking, using facial landmarks to determine the position and orientation of the head in relation to the screen.
+    Use getCords to get the coordinates of the head based on the face landmarks, and start_calibration to calibrate the head tracking system.
+
+    attributes:
+        MONITOR_WIDTH (int): The width of the monitor in pixels.
+        MONITOR_HEIGHT (int): The height of the monitor in pixels.
+        calibration_offset_yaw (float): The yaw offset for calibration.
+        calibration_offset_pitch (float): The pitch offset for calibration.
+        filter_length (int): The length of the filter for smoothing the head tracking data.
+        ray_origins (deque): A deque to store the origins of the rays for smoothing.
+        ray_directions (deque): A deque to store the directions of the rays for smoothing.
+    """
     
     def __init__(self):
         BaseOptions = mp.tasks.BaseOptions
@@ -43,6 +60,7 @@ class HeadTrackingService():
 
 
     def _landmark_to_np(self, landmark, w, h):
+        """Convert a MediaPipe landmark to a numpy array with pixel coordinates."""
         return np.array([
             landmark.x * w,
             landmark.y * h,
@@ -168,5 +186,4 @@ class HeadTrackingService():
         print('calibrando')
         self.calibration_offset_yaw = 180 - self.raw_yaw_deg
         self.calibration_offset_pitch = 180 - self.raw_pitch_deg
-        
         

@@ -12,7 +12,7 @@ class MainWindow(QWidget):
         self.setMaximumSize(800, 800)
         #self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setStyleSheet("background-color: #406EA8;")
+        self.setStyleSheet("background-color: #101831;")
         
         #Layout window
         WMainLayout = QVBoxLayout(self)

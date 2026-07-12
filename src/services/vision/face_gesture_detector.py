@@ -1,3 +1,4 @@
+from src.domain.interfaces.i_face_gesture_detector import IFaceGestureDetector
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from collections import deque
@@ -6,7 +7,7 @@ import mediapipe as mp
 import numpy as np
 import math
 
-class FaceGestureDetector():
+class FaceGestureDetector(IFaceGestureDetector):
 
     _LANDMARKS = {
     "left": 234,
@@ -73,6 +74,14 @@ class FaceGestureDetector():
         return ear    
 
     def detectBlink(self, landmarks) -> bool:
+        """
+        Detect if the eyes are closed based on the landmarks.
+
+        Args:
+            landmarks: The face landmarks detected by the model
+        returns:
+            bool: True if the eyes are closed, False otherwise
+        """
         left_ear = self._eye_aspect_ratio(landmarks, self._LEFT_EYE)
         right_ear = self._eye_aspect_ratio(landmarks, self._RIGHT_EYE)
         avg_ear = (left_ear + right_ear) / 2
@@ -89,6 +98,14 @@ class FaceGestureDetector():
         return eyes_closed_confirmed
 
     def detectBrowUp(self, landmarks) -> bool:
+        """
+        Detect if the eyebrows are raised based on the landmarks.
+
+        Args:
+            landmarks: The face landmarks detected by the model
+        returns:
+            bool: True if the eyebrows are raised, False otherwise
+        """
         # AVG Brow
         brow_y = np.mean([landmarks[i].y for i in self._BROW])
         # AVG eyes Y POINT 33 and 263
@@ -105,6 +122,6 @@ class FaceGestureDetector():
         nose_y = landmarks[1].y
         pitch_factor = 1.0 + abs(nose_y - eye_y) * 2.0
 
-        eyebrow_up_confirmed = self._BASELINE is not None and diff_smoothed > self._BASELINE + 0.02 * pitch_factor
-
+        eyebrow_up_confirmed = self._BASELINE is not None and diff_smoothed > self._BASELINE + 0.015 * pitch_factor
+    
         return eyebrow_up_confirmed

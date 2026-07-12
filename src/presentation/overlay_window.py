@@ -1,6 +1,6 @@
 import ctypes
 from PySide6.QtWidgets import  QWidget, QVBoxLayout
-from PySide6.QtGui import QPainter, QColor, QCursor
+from PySide6.QtGui import QPainter, QColor, QCursor, QPen # Añadido QPen aquí
 from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtCore import QPoint
 import time
@@ -14,7 +14,7 @@ class OverlayWindow(QWidget):
         self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.resize(1920,1080)
 
-        #Settings
+        # Settings
         self.hwnd = int(self.winId())
         GWL_EXSTYLE = -20
         WS_EX_LAYERED = 0x00080000
@@ -31,7 +31,7 @@ class OverlayWindow(QWidget):
         self.user32.SetWindowPos(self.hwnd, HWND_TOPMOST, 0, 0, 0, 0,
                             SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE)
     
-        #Layout window
+        # Layout window
         WMainLayout = QVBoxLayout(self)
         WMainLayout.setContentsMargins(0,0,0,0)
         WMainLayout.setSpacing(0)    
@@ -39,8 +39,13 @@ class OverlayWindow(QWidget):
         self.circle_pos = self.rect().center()
         self.radius = 60
         self.show_circle = True 
-
         
+        self.is_active = False 
+
+    def set_active_state(self, state: bool):
+        self.is_active = state
+        self.update() 
+
     def move_circle(self, cords):
         if cords is None:
             self.circle_pos = QPoint(500,500)
@@ -49,7 +54,7 @@ class OverlayWindow(QWidget):
             SWP_NOACTIVATE = 0x0010
             HWND_TOPMOST = -1
             self.user32.SetWindowPos(self.hwnd, HWND_TOPMOST, 0, 0, 0, 0,
-                                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE)
+                                     SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE)
             self.update()
         else:
             self.circle_pos = QPoint(cords[0], cords[1])
@@ -66,10 +71,19 @@ class OverlayWindow(QWidget):
 
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
+        
         painter.setBrush(QColor(0, 150, 255, 180))
-        painter.setPen(Qt.NoPen)
+        
+        if self.is_active:
+            outline_color = QColor(0, 255, 0, 255) 
+        else:
+            outline_color = QColor(255, 0, 0, 255) 
+
+        pen = QPen(outline_color)
+        pen.setWidth(4) 
+        painter.setPen(pen)
+
         painter.drawEllipse(self.circle_pos, self.radius, self.radius)
-        #print(self.circle_pos)
 
     """def check_flags(self):
         if self.zoom_flag["zoom_in"]:

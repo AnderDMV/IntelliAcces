@@ -33,12 +33,12 @@ class OverlayPresenter():
         self._blink_in_progress = False
 
     def _on_frame(self, frame):
-        h, w, ch = frame.shape
+        h, w, ch = frame[0].shape
         bytes_per_line = ch * w
         if self._state_view.isVisible():
-            self._state_view.update_frame(frame.data, h, w, bytes_per_line)
+            self._state_view.update_frame(frame[0].data, h, w, bytes_per_line)
         if self._calibration_view.isVisible():
-            self._calibration_view.update_frame(frame.data, h, w, bytes_per_line)
+            self._calibration_view.update_frame(frame[1].data, h, w, bytes_per_line)
         #self._view.overlay_window_circle_move.emit(self._head_tracking_service.getCords(frame, timestamp))
         #self._view.move_circle(self._head_tracking_service.getCords(frame, timestamp))
 
@@ -65,7 +65,7 @@ class OverlayPresenter():
             x,y = cords
             mc =  MouseController()
             mc.click_at(x, y)
-            mc.move_to(1,1, duration=0)
+            mc.move_to(2,2, duration=0)
 
         if self._calibration_view.isVisible() and blink and self._blink_ready and not self._blink_in_progress:
             self._blink_in_progress = True
@@ -87,6 +87,7 @@ class OverlayPresenter():
             self._brow_in_progress = True
             self.last_brow_gesture = self.now_brow_gesture
             self._brow_gesture_ready = False
+            self._view.set_active_state(not self._view.is_active)
             self._clickedState = not self._clickedState
             print('detect brow up', self._clickedState)
         
