@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import numpy as np
 
 class IHeadTrackingService(ABC):
     """
@@ -21,4 +22,12 @@ class IHeadTrackingService(ABC):
     @abstractmethod
     def start_calibration(self):
         """Start the calibration process"""
+        ...
+    
+        
+    @abstractmethod
+    def get_frames():
+        """
+        Processes the frame by implementing facial detection AI and saving the processed frame.
+        """
         ...

@@ -19,7 +19,8 @@ from src.presentation.presenters.apps_selector_presenter import AppsSelectorPres
 
 from src.services.vision.camera_service import CameraService
 from src.services.vision.head_tracking_service import HeadTrackingService
-from src.services.vision.face_gesture_detector import FaceGestureDetector
+from src.services.vision.blink_gesture_detector import BlinkGestureDetector
+from src.services.vision.brow_gesture_detector import BrowGestureDetector
 from src.services.vision.face_pipeline import FacePipeline
 from src.services.main_service import MainService
 from src.services.apps.apps_config_service import AppsConfigService
@@ -49,9 +50,10 @@ class Application():
         self._apps_config_service = AppsConfigService()
         self._apps_launcher_service = AppLauncherService()
         self._installed_apps_service = InstalledAppsService()
-        self._face_gesture_detector = FaceGestureDetector()
+        self._blink_gesture_detector = BlinkGestureDetector()
+        self._brow_gesture_detector = BrowGestureDetector()
         self._head_tracking_service = HeadTrackingService()
-        self._face_pipeline = FacePipeline(self._head_tracking_service, self._face_gesture_detector)
+        self._face_pipeline = FacePipeline(self._head_tracking_service, self._blink_gesture_detector, self._brow_gesture_detector)
         
         #Views
         self._home_view = HomeView()
