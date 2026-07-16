@@ -12,8 +12,8 @@ class VoiceDetector:
 
     def process(self, audio_bytes):
         """
-        Procesa un bloque de audio en bytes PCM.
-        Devuelve un dict con resultado parcial o final.
+        Processes the audio block audio in bytes PCM.
+        Returns dict with the final or partial result.
         """
         if self.recognizer.AcceptWaveform(audio_bytes):
             return {"type": "final", "data": json.loads(self.recognizer.Result())}
