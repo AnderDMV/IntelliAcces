@@ -3,9 +3,8 @@ import queue
 
 class MicrophoneService:
     """
-    Sirve para capturar y reproducir audio usando la API de portaudio, interactua con hardware y maneja su propio bucle interno que ejecuta callback constantemente al
-    captar una nueva pista, callback() guarda la pista en una Queue o cola la cual posteriormente será usada por el detector de voz
-    Se pasara antes dicha pista como PCM (int16, mono, frecuencia definida en vosk)
+    Captures microphone audio using the PortAudio API.
+    Continuously captures audio and stores it in a queue within its own thread.
     """
     
     def __init__(self, samplerate : int = 16000, blocksize : int = 8000 ):
