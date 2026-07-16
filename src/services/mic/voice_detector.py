@@ -4,15 +4,15 @@ import json
 class VoiceDetector:
     
     def __init__(self, model_path="src/services/mic/vosk-model-small-es-0.42", samplerate=16000):
-        # Cargar modelo de Vosk
+        # Charge model
         
         self.model = vosk.Model(model_path)
-        # Crear reconocedor
+        # Create recognizer
         self.recognizer = vosk.KaldiRecognizer(self.model, samplerate)
 
     def process(self, audio_bytes):
         """
-        Processes the audio block audio in bytes PCM.
+        Processes the audio block in bytes PCM.
         Returns dict with the final or partial result.
         """
         if self.recognizer.AcceptWaveform(audio_bytes):
