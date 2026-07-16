@@ -29,6 +29,6 @@ class VoiceDetector:
 
     def finish(self):
         """
-        Devuelve el resultado final acumulado al terminar la captura.
+        Returns the final result
         """
         return json.loads(self.recognizer.FinalResult())
