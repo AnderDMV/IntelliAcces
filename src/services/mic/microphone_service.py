@@ -7,8 +7,8 @@ class MicrophoneService:
     Continuously captures audio and stores it in a queue within its own thread.
     attributes:
         audio_queue (bytes): The audio data
-        samplerate (int): 
-        blocksize (int): T.
+        samplerate (int): audio sample capture rate per second.
+        blocksize (int): audio fragment size.
         stream (RawInptStream): Config.
     """
     
