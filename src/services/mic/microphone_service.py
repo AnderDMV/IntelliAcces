@@ -5,6 +5,11 @@ class MicrophoneService:
     """
     Captures microphone audio using the PortAudio API.
     Continuously captures audio and stores it in a queue within its own thread.
+    attributes:
+        audio_queue (bytes): The audio data
+        samplerate (int): 
+        blocksize (int): T.
+        stream (RawInptStream): Config.
     """
     
     def __init__(self, samplerate : int = 16000, blocksize : int = 8000 ):
