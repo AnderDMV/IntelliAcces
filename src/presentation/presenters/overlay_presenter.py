@@ -1,18 +1,25 @@
 import numpy as np
 from src.services.actions.mouse_controller import MouseController
+from PySide6.QtCore import QObject, Signal
 import time
 
 BLINK_COOLDOWN_MS = 1500
 BROW_COOLDOWN_MS = 2000
 
-class OverlayPresenter():
-    def __init__(self, view, calibration_view, state_view,  camera_thread, camera_service, face_pipeline):
+class OverlayPresenter(QObject):
+    
+    def __init__(self, view, navigator, calibration_view, state_view,  camera_thread, microphone_thread, microphone_service, voice_detector, camera_service, face_pipeline):
+        super().__init__()
         self._view = view
+        self._navigator = navigator
         self._calibration_view = calibration_view
         self._state_view = state_view
         #self._head_tracking_service = head_tracking_service
         self._face_pipeline = face_pipeline
         self._camera_thread = camera_thread
+        self._microphone_thread = microphone_thread
+        self._microphone_service = microphone_service
+        self._voice_detector = voice_detector
         self._camera_service = camera_service
 
         self._camera_thread.start(self._camera_service,
@@ -21,6 +28,10 @@ class OverlayPresenter():
                                   self._on_head_pose,
                                   self._on_brow_gesture,
                                   self._on_blink_gesture)
+        self._microphone_thread.start(self._microphone_service,
+                                      self._voice_detector,
+                                      self._on_command_voice)
+        
         
         self.last_blink = int(time.monotonic() * 1000)
         self.last_brow_gesture = int(time.monotonic() * 1000)
@@ -31,6 +42,9 @@ class OverlayPresenter():
 
         self._brow_in_progress = False
         self._blink_in_progress = False
+        
+    def _on_command_voice(self):
+        self._navigator.go_to("homeView", 560, 560)
 
     def _on_frame(self, frame):
         h, w, ch = frame[0].shape

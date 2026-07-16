@@ -1,4 +1,5 @@
 from src.infrastructure.threads.camera_thread import CameraThread
+from src.infrastructure.threads.microphone_thread import MicrophoneThread
 
 from src.presentation.main_window import MainWindow
 from src.presentation.overlay_window import OverlayWindow
@@ -16,6 +17,9 @@ from src.presentation.presenters.camera_state_presenter import CameraStatePresen
 from src.presentation.presenters.home_presenter import HomePresenter
 from src.presentation.presenters.apps_presenter import AppsPresenter 
 from src.presentation.presenters.apps_selector_presenter import AppsSelectorPresenter
+
+from src.services.mic.microphone_service import MicrophoneService
+from src.services.mic.voice_detector import VoiceDetector
 
 from src.services.vision.camera_service import CameraService
 from src.services.vision.head_tracking_service import HeadTrackingService
@@ -36,6 +40,7 @@ class Application():
     def _build(self):
         #Threads
         self._camera_threads = CameraThread()
+        self._microphone_thread = MicrophoneThread()
 
         #Windows
         self._overlay_window = OverlayWindow()#Overlay Window - draw circle
@@ -46,6 +51,8 @@ class Application():
         
         #Services
         self._camera_service = CameraService()
+        self._microphone_service = MicrophoneService()
+        self._voice_detector = VoiceDetector()
         self._mainService = MainService()
         self._apps_config_service = AppsConfigService()
         self._apps_launcher_service = AppLauncherService()
@@ -63,7 +70,16 @@ class Application():
         self._apps_select_view = AppsSelectorView()
 
         #Presenters
-        self._overlay_presenter = OverlayPresenter(self._overlay_window, self._calibration_view, self._camera_state_view, self._camera_threads, self._camera_service, self._face_pipeline)
+        self._overlay_presenter = OverlayPresenter(self._overlay_window,
+                                                   navigator, 
+                                                   self._calibration_view, 
+                                                   self._camera_state_view, 
+                                                   self._camera_threads, 
+                                                   self._microphone_thread, 
+                                                   self._microphone_service,
+                                                   self._voice_detector, 
+                                                   self._camera_service, 
+                                                   self._face_pipeline)
         self._camera_state_presenter = CameraStatePresenter(self._camera_state_view, navigator)
         self._calibration_presenter = CalibrationPresenter(self._calibration_view, navigator)
         self._home_presenter = HomePresenter(self._home_view, navigator , self._mainService)

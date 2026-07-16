@@ -30,7 +30,6 @@ class MainWindow(QWidget):
 
     def show_view(self, view, w, h):
         self.stack.setCurrentWidget(view)
-
         self.resize(w, h)
         self.setMinimumSize(w, h)  
         self.setMaximumSize(w, h)
@@ -40,3 +39,5 @@ class MainWindow(QWidget):
         x = (monitor.width() - w) // 2
         y = (monitor.height() - h) // 2
         self.move(x, y)
+        
+        self.setWindowState(Qt.WindowNoState) 
