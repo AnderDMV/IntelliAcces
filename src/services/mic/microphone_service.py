@@ -25,7 +25,7 @@ class MicrophoneService:
         self.audio_queue.put(bytes(indata))
     
     def start(self):
-        """Constantly saves data tracks to the queue"""
+        """starts the internal sounddevice loop for continuous capture   """
         self.stream.start()
 
     
