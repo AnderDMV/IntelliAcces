@@ -21,9 +21,11 @@ class MicrophoneService:
         
         
     def _callback(self, indata, frames, time, status):
+        """Constantly saves data tracks to the queue"""
         self.audio_queue.put(bytes(indata))
     
     def start(self):
+        """Constantly saves data tracks to the queue"""
         self.stream.start()
 
     
