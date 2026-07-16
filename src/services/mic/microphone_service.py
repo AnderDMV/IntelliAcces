@@ -30,9 +30,11 @@ class MicrophoneService:
 
     
     def read_audio(self):
+        """Gets the last captured audio track from the queue."""
         return self.audio_queue.get()
     
     
     def close(self):
+        """Gets the last captured audio track from the queue."""
         self.stream.stop()
         self.stream.close()
