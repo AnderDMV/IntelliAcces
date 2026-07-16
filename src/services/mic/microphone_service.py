@@ -9,7 +9,6 @@ class MicrophoneService:
         audio_queue (bytes): The audio data
         samplerate (int): audio sample capture rate per second.
         blocksize (int): audio fragment size.
-        stream (RawInptStream): Config.
     """
     
     def __init__(self, samplerate : int = 16000, blocksize : int = 8000 ):
